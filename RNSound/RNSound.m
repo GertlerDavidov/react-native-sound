@@ -18,20 +18,22 @@
     AVAudioSessionRouteChangeReason audioSessionRouteChangeReason = [userInfo[@"AVAudioSessionRouteChangeReasonKey"] longValue];
     AVAudioSessionInterruptionType audioSessionInterruptionType   = [userInfo[@"AVAudioSessionInterruptionTypeKey"] longValue];
     AVAudioPlayer* player = [self playerForKey:self._key];
+
+
     if (audioSessionInterruptionType == AVAudioSessionInterruptionTypeEnded){
         if (player && player.isPlaying) {
             [player play];
         }
     }
     if (audioSessionRouteChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable){
-        if (player) {
-            [player pause];
-        }
+        //if (player) {
+        //    [player pause];
+        //}
     }
     if (audioSessionInterruptionType == AVAudioSessionInterruptionTypeBegan){
-        if (player) {
-            [player pause];
-        }
+      //  if (player) {
+      //      [player pause];
+      //  }
     }
 }
 
@@ -108,6 +110,9 @@ RCT_EXPORT_METHOD(setActive:(BOOL)active) {
 }
 
 RCT_EXPORT_METHOD(setMode:(NSString *)modeName) {
+
+  NSLog(@"setModeAudio %@",modeName);
+
   AVAudioSession *session = [AVAudioSession sharedInstance];
   NSString *mode = nil;
 
@@ -287,7 +292,6 @@ RCT_EXPORT_METHOD(setSpeed:(nonnull NSNumber*)key withValue:(nonnull NSNumber*)v
   }
 }
 
-
 RCT_EXPORT_METHOD(setCurrentTime:(nonnull NSNumber*)key withValue:(nonnull NSNumber*)value) {
   AVAudioPlayer* player = [self playerForKey:key];
   if (player) {
@@ -307,12 +311,15 @@ RCT_EXPORT_METHOD(getCurrentTime:(nonnull NSNumber*)key
 
 RCT_EXPORT_METHOD(setSpeakerPhone:(BOOL) on) {
     AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *error = nil;
     if (on) {
-        [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+      [session setMode:AVAudioSessionModeDefault error:&error];  
+      [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
     } else {
-        [session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+      [session setMode:AVAudioSessionModeVoiceChat error:&error];
+      [session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
     }
-    [session setActive:true error:nil];
+    //[session setActive:true error:nil];
 }
 
 + (BOOL)requiresMainQueueSetup
