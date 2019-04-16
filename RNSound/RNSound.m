@@ -313,13 +313,10 @@ RCT_EXPORT_METHOD(setSpeakerPhone:(BOOL) on) {
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
     if (on) {
-      [session setMode:AVAudioSessionModeDefault error:&error];  
       [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
     } else {
-      [session setMode:AVAudioSessionModeVoiceChat error:&error];
       [session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
     }
-    //[session setActive:true error:nil];
 }
 
 + (BOOL)requiresMainQueueSetup
