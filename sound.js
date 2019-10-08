@@ -229,6 +229,9 @@ Sound.prototype.setSpeakerphoneOn = function(value) {
 // ios only
 
 // This is deprecated.  Call the static one instead.
+Sound.initSound = function(callback) {
+  RNSound.initSound(callback);
+};
 
 Sound.prototype.setCategory = function(value) {
   Sound.setCategory(value, false);
